@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <main className="min-h-screen text-white overflow-hidden relative" style={{
@@ -20,9 +22,9 @@ export default function Home() {
           <a href="#" className="text-sm hover:text-amber-300 transition">Pricing</a>
           <a href="#" className="text-sm hover:text-amber-300 transition">Contact</a>
           
-          <button className="bg-slate-100 text-slate-900 px-6 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition">
+          <Link href="/auth" className="bg-slate-100 text-slate-900 px-6 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition inline-block">
             Start Planning
-          </button>
+          </Link>
         </div>
       </nav>
 
@@ -38,9 +40,9 @@ export default function Home() {
         </p>
 
         <div className="mt-12 flex gap-4 justify-center">
-          <button className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition">
+          <Link href="/auth" className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block">
             Start Planning
-          </button>
+          </Link>
           <button className="border border-slate-300 text-slate-200 px-8 py-3 rounded-full font-semibold hover:bg-slate-800/50 transition">
             Learn More
           </button>
