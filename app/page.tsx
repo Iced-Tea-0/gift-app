@@ -20,7 +20,7 @@ export default function Home() {
           <a href="#" className="text-sm hover:text-amber-300 transition">Pricing</a>
           <a href="#" className="text-sm hover:text-amber-300 transition">Contact</a>
           
-          <button className="bg-amber-500 text-slate-900 px-6 py-2 rounded-full text-sm font-semibold hover:bg-amber-400 transition">
+          <button className="bg-slate-100 text-slate-900 px-6 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition">
             Start Planning
           </button>
         </div>
@@ -38,10 +38,10 @@ export default function Home() {
         </p>
 
         <div className="mt-12 flex gap-4 justify-center">
-          <button className="bg-amber-500 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 transition">
+          <button className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition">
             Start Planning
           </button>
-          <button className="border border-slate-400 text-slate-300 px-8 py-3 rounded-full font-semibold hover:bg-slate-800/50 transition">
+          <button className="border border-slate-300 text-slate-200 px-8 py-3 rounded-full font-semibold hover:bg-slate-800/50 transition">
             Learn More
           </button>
         </div>
