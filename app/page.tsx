@@ -2,22 +2,12 @@
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white overflow-hidden relative">
-      
-      {/* Starlight effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-200 rounded-full opacity-60"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${2 + Math.random() * 3}s infinite`,
-            }}
-          />
-        ))}
-      </div>
+    <main className="min-h-screen text-white overflow-hidden relative" style={{
+      backgroundImage: 'url(/hero-bg.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
 
       {/* Navigation Header */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
@@ -57,13 +47,6 @@ export default function Home() {
         </div>
 
       </section>
-
-      <style jsx>{`
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.8; }
-        }
-      `}</style>
     </main>
   );
 }
