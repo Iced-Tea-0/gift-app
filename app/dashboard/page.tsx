@@ -70,7 +70,6 @@ export default function Dashboard() {
             Log Out
           </button>
         </div>
-        </div>
       </nav>
 
       {/* Dashboard Content */}
