@@ -1,9 +1,40 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { validateCredentials, setAuthSession } from '@/lib/auth';
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!isSignUp) {
+      // Login
+      const user = validateCredentials(email, password);
+      if (user) {
+        setAuthSession(user);
+        router.push('/dashboard');
+      } else {
+        setError('Invalid email or password. Try test@giftem.com / password123');
+      }
+    } else {
+      // Sign up (mock - just set session)
+      const user = {
+        id: '2',
+        name: 'New User',
+        email: email,
+      };
+      setAuthSession(user);
+      router.push('/dashboard');
+    }
+  };
 
   return (
     <main className="min-h-screen text-white overflow-hidden relative" style={{
@@ -40,8 +71,15 @@ export default function AuthPage() {
             {isSignUp ? 'Join us to start your gift planning journey' : 'Log in to access your account'}
           </p>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm text-center">
+              {error}
+            </div>
+          )}
+
           {/* Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Name Field - Sign Up Only */}
             {isSignUp && (
               <div>
@@ -62,6 +100,8 @@ export default function AuthPage() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-white/40 transition"
               />
             </div>
@@ -73,6 +113,8 @@ export default function AuthPage() {
                 id="password"
                 type="password"
                 placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-white/40 transition"
               />
             </div>

@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { getAuthSession, clearAuthSession, type User } from '@/lib/auth';
 
 interface Recipient {
   id: string;
@@ -16,7 +18,22 @@ interface Recipient {
 
 export default function Dashboard() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
-  const userName = 'Alex'; // This would come from auth/session in a real app
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const authUser = getAuthSession();
+    if (!authUser) {
+      router.push('/auth');
+    } else {
+      setUser(authUser);
+    }
+  }, [router]);
+
+  const handleLogout = () => {
+    clearAuthSession();
+    router.push('/');
+  };
 
   const calculateProgressPercentage = (current: number, target: number) => {
     return (current / target) * 100;
@@ -45,22 +62,14 @@ export default function Dashboard() {
         <div className="text-2xl font-bold">GiftEm</div>
 
         <div className="flex items-center gap-8">
-          <a href="/" className="text-sm hover:text-slate-300 transition">
-            Home
-          </a>
-          <a href="#" className="text-sm hover:text-slate-300 transition">
-            How It Works
-          </a>
-          <a href="#" className="text-sm hover:text-slate-300 transition">
-            About
-          </a>
-
-          <div className="flex items-center gap-4 ml-8 pl-8 border-l border-slate-600">
-            <span className="text-sm">{userName}</span>
-            <button className="text-slate-300 text-sm hover:text-slate-200 transition">
-              Log Out
-            </button>
-          </div>
+          <div className="text-sm">Welcome, {user?.name || 'User'}</div>
+          <button
+            onClick={handleLogout}
+            className="bg-slate-100 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition"
+          >
+            Log Out
+          </button>
+        </div>
         </div>
       </nav>
 
@@ -69,7 +78,7 @@ export default function Dashboard() {
         {/* Greeting and Add Button */}
         <div className="flex items-center justify-between mb-12">
           <h1 className="font-serif text-5xl md:text-6xl font-bold">
-            Your Gift Plans, <span className="text-slate-300">{userName}</span>
+            Your Gift Plans, <span className="text-slate-300">{user?.name || 'User'}</span>
           </h1>
 
           <button className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition">
