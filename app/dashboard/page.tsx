@@ -80,9 +80,9 @@ export default function Dashboard() {
             Your Gift Plans, <span className="text-slate-300">{user?.name || 'User'}</span>
           </h1>
 
-          <button className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition">
+          <Link href="/add-recipient" className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block">
             Add New Recipient
-          </button>
+          </Link>
         </div>
 
         {/* Recipients Grid or Empty State */}
@@ -92,9 +92,9 @@ export default function Dashboard() {
             <p className="text-slate-300 text-lg mb-8">
               No gift plans yet. Start planning your first gift.
             </p>
-            <button className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition">
+            <Link href="/add-recipient" className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block">
               Add Recipient
-            </button>
+            </Link>
           </div>
         ) : (
           // Recipients Grid
