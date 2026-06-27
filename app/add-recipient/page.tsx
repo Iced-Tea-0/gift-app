@@ -7,34 +7,17 @@ interface Message {
   id: string;
   type: 'ai' | 'user';
   text: string;
-  showChips?: boolean;
-  chips?: string[];
-  showGifts?: boolean;
+  products?: Product[];
 }
 
-interface Gift {
-  id: string;
-  name: string;
-  description: string;
+interface Product {
+  title: string;
+  price: string;
+  image: string;
+  url: string;
+  rating: string;
+  interest?: string;
 }
-
-const sampleGifts: Gift[] = [
-  {
-    id: '1',
-    name: 'Luxury Candle Set',
-    description: 'Premium scented candles for cosy moments',
-  },
-  {
-    id: '2',
-    name: 'Silk Pillowcase',
-    description: 'Luxurious bedding for ultimate comfort',
-  },
-  {
-    id: '3',
-    name: 'Wellness Tea Collection',
-    description: 'Curated herbal teas for relaxation',
-  },
-];
 
 export default function GiftPlanningChat() {
   const [messages, setMessages] = useState<Message[]>([
@@ -43,94 +26,67 @@ export default function GiftPlanningChat() {
       type: 'ai',
       text: 'Hi! Who are you planning this gift for?',
     },
-    {
-      id: '2',
-      type: 'user',
-      text: 'My mum',
-    },
-    {
-      id: '3',
-      type: 'ai',
-      text: 'How lovely! What is the occasion?',
-    },
-    {
-      id: '4',
-      type: 'user',
-      text: 'Mothers Day',
-    },
-    {
-      id: '5',
-      type: 'ai',
-      text: 'What is your budget?',
-    },
-    {
-      id: '6',
-      type: 'user',
-      text: '£40',
-    },
-    {
-      id: '7',
-      type: 'ai',
-      text: "Tell me a little about her — what does she love? You can pick from some options or describe her yourself",
-      showChips: true,
-      chips: ['Cosy homebody', 'Loves fashion', 'Foodie', 'Outdoorsy', 'Describe her myself'],
-    },
-    {
-      id: '8',
-      type: 'user',
-      text: 'Cosy homebody',
-    },
-    {
-      id: '9',
-      type: 'ai',
-      text: 'Perfect! Here are some gift ideas that would suit her perfectly. These options combine comfort, quality, and thoughtfulness.',
-      showGifts: true,
-    },
   ]);
 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
 
-    const newMessage: Message = {
-      id: String(messages.length + 1),
+    const userMessage: Message = {
+      id: String(Date.now()),
       type: 'user',
       text: inputValue,
     };
 
-    setMessages([...messages, newMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputValue('');
     setIsLoading(true);
 
-    setTimeout(() => {
+    const history = updatedMessages.map((m) => ({
+      role: m.type === 'ai' ? 'assistant' : 'user',
+      content: m.text,
+    }));
+
+    const userCountry = navigator.language.split('-')[1] || 'US';
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history, country: userCountry }),
+      });
+
+      const data = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: String(Date.now() + 1),
+          type: 'ai',
+          text: data.reply,
+          products: data.products || undefined,
+        },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: String(Date.now() + 1),
+          type: 'ai',
+          text: 'Something went wrong, please try again.',
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
-  };
-
-  const handleChipClick = (chip: string) => {
-    const userMessage: Message = {
-      id: String(messages.length + 1),
-      type: 'user',
-      text: chip,
-    };
-
-    setMessages([...messages, userMessage]);
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -143,68 +99,52 @@ export default function GiftPlanningChat() {
         backgroundAttachment: 'fixed',
       }}
     >
-      {/* Top Bar */}
       <div className="relative z-10 flex items-center gap-4 px-8 py-6 border-b border-white/10">
         <Link href="/dashboard" className="text-slate-300 hover:text-white transition">
-          ← Back
+          Back
         </Link>
         <h1 className="font-serif text-2xl font-bold">Plan a Gift</h1>
       </div>
 
-      {/* Chat Area */}
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
         {messages.map((message) => (
           <div key={message.id}>
-            <div
-              className={`flex gap-4 ${
-                message.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
+            <div className={`flex gap-4 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.type === 'ai' && (
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-slate-400/50">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900">
                   G
                 </div>
               )}
-
-              <div
-                className={`max-w-xl ${
-                  message.type === 'user'
-                    ? 'bg-white/10 border border-white/20 rounded-3xl px-6 py-3 backdrop-blur-md'
-                    : 'bg-transparent'
-                }`}
-              >
+              <div className={`max-w-xl ${message.type === 'user' ? 'bg-white/10 border border-white/20 rounded-3xl px-6 py-3 backdrop-blur-md' : 'bg-transparent'}`}>
                 <p className="text-slate-100">{message.text}</p>
               </div>
             </div>
 
-            {/* Suggestion Chips */}
-            {message.showChips && message.chips && (
-              <div className="ml-14 mt-4 flex flex-wrap gap-2">
-                {message.chips.map((chip) => (
-                  <button
-                    key={chip}
-                    onClick={() => handleChipClick(chip)}
-                    className="px-4 py-2 bg-white/5 border border-white/20 rounded-full text-sm text-slate-200 hover:bg-white/10 hover:border-white/40 transition"
-                  >
-                    {chip}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Gift Suggestions */}
-            {message.showGifts && (
-              <div className="ml-14 mt-6 grid grid-cols-3 gap-4">
-                {sampleGifts.map((gift) => (
+            {message.products && message.products.length > 0 && (
+              <div className="ml-14 mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {message.products.map((product, i) => (
                   <div
-                    key={gift.id}
-                    className="bg-white/5 border border-white/20 rounded-lg p-4 backdrop-blur-md hover:bg-white/10 transition cursor-pointer"
+                    key={i}
+                    onClick={() => window.open(product.url, '_blank')}
+                    className="bg-white/5 border border-white/20 rounded-xl p-4 backdrop-blur-md hover:bg-white/10 transition cursor-pointer"
                   >
-                    <div className="w-full h-32 bg-white/10 rounded-lg mb-3"></div>
-                    <h3 className="font-semibold text-slate-100 text-sm mb-1">
-                      {gift.name}
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-36 object-cover rounded-lg mb-3"
+                    />
+                    {product.interest && (
+                      <span className="text-xs text-amber-400 uppercase tracking-wide font-semibold mb-1 block">
+                        {product.interest}
+                      </span>
+                    )}
+                    <h3 className="font-semibold text-slate-100 text-sm mb-1 line-clamp-2">
+                      {product.title}
                     </h3>
-                    <p className="text-xs text-slate-300">{gift.description}</p>
+                    <p className="text-amber-400 font-bold text-sm">{product.price}</p>
+                    {product.rating && (
+                      <p className="text-xs text-slate-400 mt-1">⭐ {product.rating}</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -214,10 +154,10 @@ export default function GiftPlanningChat() {
 
         {isLoading && (
           <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900 shadow-lg shadow-slate-400/50">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900">
               G
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 items-center">
               <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
               <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
               <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
@@ -228,7 +168,6 @@ export default function GiftPlanningChat() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar */}
       <div className="relative z-10 border-t border-white/10 bg-slate-950/50 backdrop-blur-md px-8 py-6">
         <div className="flex gap-3 max-w-4xl mx-auto">
           <input
