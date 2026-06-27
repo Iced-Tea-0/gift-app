@@ -30,6 +30,13 @@ export default function GiftPlanningChat() {
 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [recipientName, setRecipientName] = useState('');
+  const [occasionDate, setOccasionDate] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,6 +99,42 @@ export default function GiftPlanningChat() {
 
   const handleQuickReply = (text: string) => {
     handleSendMessage(text);
+  };
+
+  const handleSaveGift = async () => {
+    if (!selectedProduct || !recipientName || !occasionDate) return;
+    setSaving(true);
+
+    const price = parseFloat(selectedProduct.price.replace(/[^0-9.]/g, "")) || 0;
+
+    try {
+      const res = await fetch('/api/recipients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipientName,
+          relationship: '',
+          occasionDate,
+          giftTitle: selectedProduct.title,
+          giftPrice: price,
+          giftUrl: selectedProduct.url,
+          giftImage: selectedProduct.image,
+        }),
+      });
+
+      if (res.ok) {
+        setSavedSuccess(true);
+        setShowSaveModal(false);
+        setSelectedProduct(null);
+        setRecipientName('');
+        setOccasionDate('');
+        setTimeout(() => setSavedSuccess(false), 3000);
+      }
+    } catch {
+      console.error('Save failed');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -170,7 +213,13 @@ export default function GiftPlanningChat() {
                       Different category
                     </button>
                     <button
-                      onClick={() => handleQuickReply("I've found the one I want to gift")}
+                      onClick={() => {
+                        const lastProductMessage = [...messages].reverse().find(m => m.products && m.products.length > 0);
+                        if (lastProductMessage?.products) {
+                          setAllProducts(lastProductMessage.products);
+                          setShowSaveModal(true);
+                        }
+                      }}
                       className="px-4 py-2 bg-amber-500/20 border border-amber-500/40 rounded-full text-sm text-amber-300 hover:bg-amber-500/30 transition"
                     >
                       I'll go with one of these
@@ -217,6 +266,76 @@ export default function GiftPlanningChat() {
           </button>
         </div>
       </div>
+
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="bg-slate-900 border border-white/20 rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="font-serif text-2xl font-bold mb-6">Pick your gift</h2>
+
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              {allProducts.map((product, i) => (
+                <div
+                  key={i}
+                  onClick={() => setSelectedProduct(product)}
+                  className={`p-3 rounded-xl border cursor-pointer transition ${
+                    selectedProduct?.title === product.title
+                      ? 'border-amber-400 bg-amber-500/10'
+                      : 'border-white/20 bg-white/5 hover:bg-white/10'
+                  }`}
+                >
+                  <img src={product.image} alt={product.title} className="w-full h-24 object-cover rounded-lg mb-2" />
+                  <p className="text-xs text-slate-100 line-clamp-2 mb-1">{product.title}</p>
+                  <p className="text-amber-400 font-bold text-sm">{product.price}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">Recipient's name</label>
+                <input
+                  type="text"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                  placeholder="e.g. Mum, Sarah, John"
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-white/40"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">Occasion date</label>
+                <input
+                  type="date"
+                  value={occasionDate}
+                  onChange={(e) => setOccasionDate(e.target.value)}
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/40"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="flex-1 border border-white/20 text-slate-300 py-3 rounded-lg hover:bg-white/5 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveGift}
+                disabled={!selectedProduct || !recipientName || !occasionDate || saving}
+                className="flex-1 bg-amber-500 text-slate-900 py-3 rounded-lg font-semibold hover:bg-amber-400 disabled:opacity-50 transition"
+              >
+                {saving ? 'Saving...' : 'Save Gift Goal'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {savedSuccess && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500/40 text-green-300 px-6 py-3 rounded-full z-50">
+          Gift saved! Check your dashboard.
+        </div>
+      )}
     </main>
   );
 }
