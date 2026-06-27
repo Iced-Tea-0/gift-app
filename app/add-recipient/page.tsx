@@ -147,7 +147,7 @@ export default function GiftPlanningChat() {
         backgroundAttachment: 'fixed',
       }}
     >
-      <div className="relative z-10 flex items-center gap-4 px-8 py-6 border-b border-white/10">
+      <div className="sticky top-0 z-10 flex items-center gap-4 px-8 py-6 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
         <Link href="/dashboard" className="text-slate-300 hover:text-white transition">
           Back
         </Link>
