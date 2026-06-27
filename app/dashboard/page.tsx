@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { getAuthSession, clearAuthSession, type User } from '@/lib/auth';
 
 interface Recipient {
   id: string;
@@ -16,35 +15,39 @@ interface Recipient {
   targetAmount: number;
 }
 
+interface User {
+  name: string;
+  email: string;
+  userId: string;
+}
+
 export default function Dashboard() {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const authUser = getAuthSession();
-    if (!authUser) {
-      router.push('/auth');
-    } else {
-      setUser(authUser);
-    }
+    // Get user info from API
+    fetch('/api/auth/me')
+      .then((res) => {
+        if (!res.ok) {
+          router.push('/auth');
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data) setUser(data);
+      });
   }, [router]);
 
-  const handleLogout = () => {
-    clearAuthSession();
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/');
   };
 
   const calculateProgressPercentage = (current: number, target: number) => {
     return (current / target) * 100;
-  };
-
-  const calculateDaysUntil = (dateString: string) => {
-    const today = new Date();
-    const eventDate = new Date(dateString);
-    const diffTime = eventDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
   };
 
   return (
@@ -57,10 +60,8 @@ export default function Dashboard() {
         backgroundAttachment: 'fixed',
       }}
     >
-      {/* Navigation Header */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
         <div className="text-2xl font-bold">GiftEm</div>
-
         <div className="flex items-center gap-8">
           <div className="text-sm">Welcome, {user?.name || 'User'}</div>
           <button
@@ -72,22 +73,17 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Dashboard Content */}
       <div className="relative z-10 px-8 py-12 max-w-7xl mx-auto w-full">
-        {/* Greeting and Add Button */}
         <div className="flex items-center justify-between mb-12">
           <h1 className="font-serif text-5xl md:text-6xl font-bold">
             Your Gift Plans, <span className="text-slate-300">{user?.name || 'User'}</span>
           </h1>
-
           <Link href="/add-recipient" className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block">
             Add New Recipient
           </Link>
         </div>
 
-        {/* Recipients Grid or Empty State */}
         {recipients.length === 0 ? (
-          // Empty State
           <div className="flex flex-col items-center justify-center py-24">
             <p className="text-slate-300 text-lg mb-8">
               No gift plans yet. Start planning your first gift.
@@ -97,20 +93,16 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          // Recipients Grid
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recipients.map((recipient) => (
               <div
                 key={recipient.id}
                 className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition"
               >
-                {/* Header */}
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold mb-1">{recipient.name}</h3>
                   <p className="text-slate-300 text-sm">{recipient.relationship}</p>
                 </div>
-
-                {/* Occasion Info */}
                 <div className="mb-6 pb-6 border-b border-white/10">
                   <p className="text-slate-300 text-sm mb-2">
                     <span className="text-slate-400">Occasion:</span> {recipient.occasion}
@@ -122,8 +114,6 @@ export default function Dashboard() {
                     {recipient.daysUntil} days until {recipient.occasion}
                   </p>
                 </div>
-
-                {/* Savings Progress */}
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-sm text-slate-300">Savings Progress</span>
@@ -131,25 +121,15 @@ export default function Dashboard() {
                       ${recipient.currentAmount} / ${recipient.targetAmount}
                     </span>
                   </div>
-
-                  {/* Progress Bar */}
                   <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-slate-100 rounded-full transition-all duration-300"
                       style={{
-                        width: `${Math.min(
-                          calculateProgressPercentage(
-                            recipient.currentAmount,
-                            recipient.targetAmount
-                          ),
-                          100
-                        )}%`,
+                        width: `${Math.min(calculateProgressPercentage(recipient.currentAmount, recipient.targetAmount), 100)}%`,
                       }}
                     />
                   </div>
                 </div>
-
-                {/* View Gifts Button */}
                 <button className="w-full border border-slate-300 text-slate-200 py-2 rounded-lg font-semibold hover:bg-slate-800/50 transition">
                   View Gifts
                 </button>

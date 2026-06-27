@@ -1,51 +1,31 @@
-// Mock authentication for testing
-// In production, this would use a real auth provider (Better Auth, Supabase, etc)
+import jwt from "jsonwebtoken";
 
-export interface User {
-  id: string;
+export interface AuthUser {
+  userId: string;
   name: string;
   email: string;
 }
 
-// Test credentials
-export const TEST_CREDENTIALS = {
-  email: 'test@giftem.com',
-  password: 'password123',
-  name: 'Alex',
-};
+export async function getAuthUser(): Promise<AuthUser | null> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
 
-export function validateCredentials(email: string, password: string): User | null {
-  if (email === TEST_CREDENTIALS.email && password === TEST_CREDENTIALS.password) {
-    return {
-      id: '1',
-      name: TEST_CREDENTIALS.name,
-      email: TEST_CREDENTIALS.email,
-    };
-  }
-  return null;
-}
+    if (!token) return null;
 
-export function setAuthSession(user: User): void {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('giftem_user', JSON.stringify(user));
-    localStorage.setItem('giftem_session', 'active');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthUser;
+    return decoded;
+  } catch {
+    return null;
   }
 }
 
-export function getAuthSession(): User | null {
-  if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('giftem_user');
-    const session = localStorage.getItem('giftem_session');
-    if (user && session) {
-      return JSON.parse(user);
-    }
-  }
-  return null;
-}
-
-export function clearAuthSession(): void {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('giftem_user');
-    localStorage.removeItem('giftem_session');
+export function getAuthUserFromToken(token: string): AuthUser | null {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthUser;
+    return decoded;
+  } catch {
+    return null;
   }
 }
