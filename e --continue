@@ -1,0 +1,215 @@
+[1mdiff --cc app/page.tsx[m
+[1mindex c4edeed,3c2cd70..0000000[m
+[1m--- a/app/page.tsx[m
+[1m+++ b/app/page.tsx[m
+[36m@@@ -1,39 -1,58 +1,58 @@@[m
+  'use client';[m
+  [m
+  import Link from 'next/link';[m
+[31m- import { useState } from 'react';[m
+[32m+ import { useState, useEffect } from 'react';[m
+  [m
+  export default function Home() {[m
+[31m -  const [showAboutModal, setShowAboutModal] = useState(false);[m
+    const [showContactModal, setShowContactModal] = useState(false);[m
+[32m+   const [isLoggedIn, setIsLoggedIn] = useState(false);[m
+[32m+ [m
+[32m+   useEffect(() => {[m
+[32m+     fetch('/api/auth/me')[m
+[32m+       .then(res => {[m
+[32m+         if (res.ok) setIsLoggedIn(true);[m
+[32m+       });[m
+[32m+   }, []);[m
+  [m
+    return ([m
+[31m-     <main className="min-h-screen overflow-hidden relative">[m
+[31m-       {/* Decorative floating elements */}[m
+[31m-       <div className="fixed inset-0 pointer-events-none overflow-hidden">[m
+[32m+         <main className="min-h-screen relative">[m
+[32m+         <div className="fixed inset-0 pointer-events-none overflow-hidden">[m
+          <div className="absolute top-20 left-10 text-4xl opacity-20 animate-float">✦</div>[m
+[31m-         <div className="absolute top-40 right-20 text-5xl opacity-15 animate-float" style={{animationDelay: '1s'}}>✧</div>[m
+          <div className="absolute bottom-32 left-1/4 text-3xl opacity-20 animate-float" style={{animationDelay: '2s'}}>♡</div>[m
+        </div>[m
+  [m
+[31m -      <nav className="sticky top-0 z-20 w-full bg-white/80 backdrop-blur-md border-b border-pink-100">[m
+[31m -    <div className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">[m
+[32m +      {/* Navigation Header */}[m
+[32m +      <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">[m
+[31m-         <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>[m
+[32m+         <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>[m
+          [m
+          <div className="flex items-center gap-8">[m
+            <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Home</a>[m
+            <a href="#how-it-works" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">How It Works</a>[m
+[31m-           <a href="#about" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</a>[m
+[32m+           <button onClick={() => setShowAboutModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</button>[m
+[32m++          <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Pricing</a>[m
+            <button onClick={() => setShowContactModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Contact</button>[m
+            [m
+[31m-           <Link href="/auth" className="btn-gradient text-white px-6 py-2 rounded-full text-sm font-bold hover:shadow-lg transition inline-block">[m
+[32m+           {isLoggedIn ? ([m
+[32m+             <Link href="/dashboard" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">[m
+[32m+               Dashboard[m
+[32m+             </Link>[m
+[32m+           ) : ([m
+[32m+             <Link href="/auth" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">[m
+[32m+               Login[m
+[32m+             </Link>[m
+[32m+           )}[m
+[32m+ [m
+[32m+           <Link[m
+[32m+             href={isLoggedIn ? '/dashboard' : '/auth'}[m
+[32m+             className="btn-gradient text-white px-6 py-2 rounded-full text-sm font-bold hover:shadow-lg transition inline-block"[m
+[32m+           >[m
+              Start Planning[m
+[31m-           </Link>[m
+[32m+            </Link>[m
+          </div>[m
+[31m-       </nav>[m
+[32m+       </div>[m
+[32m+     </nav>[m
+  [m
+[31m-       {/* Hero Section */}[m
+        <section className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-100px)] px-6 text-center">[m
+[31m-         [m
+          <h1 className="font-bold text-6xl md:text-7xl leading-tight max-w-4xl mb-6 text-gray-900">[m
+            Never Miss The <span className="italic text-pink-600">Perfect Gift</span>[m
+          </h1>[m
+[36m@@@ -74,84 -94,9 +94,83 @@@[m
+          </div>[m
+        </section>[m
+  [m
+[32m +      {/* About Us Section */}[m
+[32m +      <section id="about" className="relative z-10 px-8 py-20 max-w-6xl mx-auto">[m
+[32m +        <div className="glass-card rounded-3xl p-12 md:p-16 text-center">[m
+[32m +          {/* Decorative ribbon element */}[m
+[32m +          <div className="mb-8 text-4xl">✦</div>[m
+[32m +          [m
+[32m +          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind Amoris</h2>[m
+[32m +          [m
+[32m +          <p className="text-gray-700 text-lg font-medium max-w-3xl mx-auto mb-12">[m
+[32m +            We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. Amoris was born from a simple belief: that every gift should be meaningful, and giving it should be effortless. We&apos;re here to help you never miss a special moment and always find a gift that truly speaks to the person you care about.[m
+[32m +          </p>[m
+[32m +[m
+[32m +          {/* Founder Cards */}[m
+[32m +          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">[m
+[32m +            <div className="glass rounded-2xl p-8 hover:shadow-lg transition">[m
+[32m +              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-300 to-pink-500 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">[m
+[32m +                💝[m
+[32m +              </div>[m
+[32m +              <h3 className="text-xl font-bold text-gray-900 mb-1">Samay Kandlur</h3>[m
+[32m +              <p className="text-gray-600 font-semibold mb-3">Co-Founder</p>[m
+[32m +              <div className="flex gap-3 justify-center">[m
+[32m +                <a[m
+[32m +                  href="https://github.com/samaykandlur"[m
+[32m +                  target="_blank"[m
+[32m +                  rel="noopener noreferrer"[m
+[32m +                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"[m
+[32m +                >[m
+[32m +                  GitHub[m
+[32m +                </a>[m
+[32m +                <span className="text-gray-400">•</span>[m
+[32m +                <a[m
+[32m +                  href="https://www.linkedin.com/in/samay-shailesh-kandlur/"[m
+[32m +                  target="_blank"[m
+[32m +                  rel="noopener noreferrer"[m
+[32m +                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"[m
+[32m +                >[m
+[32m +                  LinkedIn[m
+[32m +                </a>[m
+[32m +              </div>[m
+[32m +            </div>[m
+[32m +[m
+[32m +            <div className="glass rounded-2xl p-8 hover:shadow-lg transition">[m
+[32m +              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">[m
+[32m +                🎀[m
+[32m +              </div>[m
+[32m +              <h3 className="text-xl font-bold text-gray-900 mb-1">Juwairiyah Shariff</h3>[m
+[32m +              <p className="text-gray-600 font-semibold mb-3">Co-Founder</p>[m
+[32m +              <div className="flex gap-3 justify-center">[m
+[32m +                <a[m
+[32m +                  href="https://github.com/JuwairiyahP"[m
+[32m +                  target="_blank"[m
+[32m +                  rel="noopener noreferrer"[m
+[32m +                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"[m
+[32m +                >[m
+[32m +                  GitHub[m
+[32m +                </a>[m
+[32m +                <span className="text-gray-400">•</span>[m
+[32m +                <a[m
+[32m +                  href="https://www.linkedin.com/in/juwairiyah-shariff-913582386/"[m
+[32m +                  target="_blank"[m
+[32m +                  rel="noopener noreferrer"[m
+[32m +                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"[m
+[32m +                >[m
+[32m +                  LinkedIn[m
+[32m +                </a>[m
+[32m +              </div>[m
+[32m +            </div>[m
+[32m +          </div>[m
+[32m +[m
+[32m +          {/* Decorative sparkle element */}[m
+[32m +          <div className="mt-12 text-3xl">✧</div>[m
+[32m +        </div>[m
+[32m +      </section>[m
+[32m +[m
+[31m-       {/* Footer */}[m
+        <footer className="relative z-10 border-t border-pink-200 bg-white/40 backdrop-blur-sm px-8 py-12 mt-20">[m
+          <div className="max-w-6xl mx-auto flex justify-between items-center">[m
+[31m-           <div className="text-gray-700 font-semibold">© 2026 Amoris. All rights reserved.</div>[m
+[31m -          <div className="text-gray-700 font-semibold">© 2026 GiftEm. All rights reserved.</div>[m
+[32m++          <div className="text-gray-700 font-semibold">© 2024 GiftEm. All rights reserved.</div>[m
+            <div className="flex gap-8">[m
+              <a href="#" className="text-gray-600 hover:text-pink-600 transition">Privacy</a>[m
+              <a href="#" className="text-gray-600 hover:text-pink-600 transition">Terms</a>[m
+[36m@@@ -160,23 -105,29 +179,38 @@@[m
+          </div>[m
+        </footer>[m
+  [m
+[31m-       {/* Contact Modal */}[m
+[31m-       {showContactModal && ([m
+[32m++      {/* About Modal */}[m
+[32m+       {showAboutModal && ([m
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">[m
+[31m-           <div className="glass-card rounded-2xl p-12 max-w-md w-full relative animate-in fade-in zoom-in duration-300">[m
+[32m+           <div className="glass-card rounded-2xl p-12 max-w-md w-full text-center relative animate-in fade-in zoom-in duration-300">[m
+[31m -            <button onClick={() => setShowAboutModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>[m
+[32m +            <button[m
+[31m-               onClick={() => setShowContactModal(false)}[m
+[32m++              onClick={() => setShowAboutModal(false)}[m
+[32m +              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light"[m
+[32m +            >[m
+[32m +              ×[m
+[32m +            </button>[m
+[32m+             <div className="text-5xl mb-4">🎁</div>[m
+[32m+             <h2 className="text-2xl font-bold text-gray-900 mb-4">About GiftEm</h2>[m
+[32m+             <p className="text-gray-600 font-medium mb-6">[m
+[32m+               We believe every gift tells a story. GiftEm combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.[m
+[32m+             </p>[m
+[31m -            <button onClick={() => setShowAboutModal(false)} className="btn-gradient text-white px-6 py-2 rounded-full font-bold text-sm">[m
+[32m++            <button[m
+[32m++              onClick={() => setShowAboutModal(false)}[m
+[32m++              className="btn-gradient text-white px-6 py-2 rounded-full font-bold text-sm"[m
+[32m++            >[m
+[32m+               Got It[m
+[32m+             </button>[m
+[32m+           </div>[m
+[32m+         </div>[m
+[32m+       )}[m
+[32m+ [m
+[32m+       {showContactModal && ([m
+[32m+         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">[m
+[32m+           <div className="glass-card rounded-2xl p-12 max-w-md w-full relative animate-in fade-in zoom-in duration-300">[m
+[32m+             <button onClick={() => setShowContactModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>[m
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">We'd Love to Hear From You</h2>[m
+              <p className="text-gray-600 text-center mb-6 font-medium text-sm">Got questions or feedback?</p>[m
+[31m-             [m
+[31m-             <form className="space-y-4" onSubmit={(e) => {[m
+[31m-               e.preventDefault();[m
+[31m-               setShowContactModal(false);[m
+[31m-             }}>[m
+[32m+             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setShowContactModal(false); }}>[m
+                <input[m
+                  type="email"[m
+                  placeholder="your@email.com"[m
