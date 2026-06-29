@@ -139,8 +139,12 @@ export default function Dashboard() {
                     </div>
                     <p className="text-xs text-gray-600 mt-2 font-medium">Save ${goal.dailyTarget}/day to reach your goal</p>
                   </div>
-                  <Link href={`/savings/${goal.savingsId}`} className="w-full block text-center btn-gradient text-white py-3 rounded-full font-bold text-sm hover:shadow-lg transition">
-                    Manage Savings
+
+                  <Link
+                    href={`/recipients/${goal.recipientId}`}
+                    className="w-full block text-center btn-gradient text-white py-3 rounded-full font-bold text-sm hover:shadow-lg transition"
+                  >
+                    View Details
                   </Link>
                 </div>
               </div>
