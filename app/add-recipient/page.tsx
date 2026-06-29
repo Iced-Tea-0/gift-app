@@ -39,6 +39,12 @@ export default function GiftPlanningChat() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Get today's date in YYYY-MM-DD format for min date attribute
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -145,14 +151,14 @@ export default function GiftPlanningChat() {
         <div className="absolute bottom-1/4 left-20 text-6xl opacity-10 animate-float" style={{animationDelay: '1.5s'}}>✧</div>
       </div>
 
-      <div className="sticky top-0 z-20 flex items-center gap-4 px-8 py-6 border-b border-pink-200/50 glass">
+      <div className="fixed top-0 left-0 right-0 z-30 flex items-center gap-4 px-8 py-6 border-b border-pink-200/40 bg-white/50 backdrop-blur-md">
         <Link href="/dashboard" className="text-gray-700 hover:text-pink-600 transition font-semibold">
           ← Back to Dashboard
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">Plan a Gift</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-8 py-8 space-y-6 relative z-10 max-w-4xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-8 py-8 space-y-6 relative z-10 max-w-4xl mx-auto w-full pt-24">
         {messages.map((message, msgIndex) => (
           <div key={message.id}>
             <div className={`flex gap-4 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -309,6 +315,7 @@ export default function GiftPlanningChat() {
                 <label className="block text-sm text-gray-900 font-bold mb-2">Occasion date</label>
                 <input
                   type="date"
+                  min={getTodayDate()}
                   value={occasionDate}
                   onChange={(e) => setOccasionDate(e.target.value)}
                   className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Home() {
-  const [showAboutModal, setShowAboutModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
 
   return (
@@ -23,7 +22,7 @@ export default function Home() {
         <div className="flex items-center gap-8">
           <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Home</a>
           <a href="#how-it-works" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">How It Works</a>
-          <button onClick={() => setShowAboutModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</button>
+          <a href="#about" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</a>
           <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Pricing</a>
           <button onClick={() => setShowContactModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Contact</button>
           
@@ -76,6 +75,48 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Us Section */}
+      <section id="about" className="relative z-10 px-8 py-20 max-w-6xl mx-auto">
+        <div className="glass-card rounded-3xl p-12 md:p-16 text-center">
+          {/* Decorative ribbon element */}
+          <div className="mb-8 text-4xl">✦</div>
+          
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind GiftEm</h2>
+          
+          <p className="text-gray-700 text-lg font-medium max-w-3xl mx-auto mb-12">
+            We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. GiftEm was born from a simple belief: that every gift should be meaningful, and giving it should be effortless. We&apos;re here to help you never miss a special moment and always find a gift that truly speaks to the person you care about.
+          </p>
+
+          {/* Founder Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            <div className="glass rounded-2xl p-8 hover:shadow-lg transition">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-300 to-pink-500 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
+                💝
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Sarah Mitchell</h3>
+              <p className="text-gray-600 font-semibold mb-2">Co-Founder & CEO</p>
+              <p className="text-sm text-gray-600">
+                Gift enthusiast and tech innovator passionate about meaningful connections.
+              </p>
+            </div>
+
+            <div className="glass rounded-2xl p-8 hover:shadow-lg transition">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
+                🎀
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Marcus Chen</h3>
+              <p className="text-gray-600 font-semibold mb-2">Co-Founder & CTO</p>
+              <p className="text-sm text-gray-600">
+                AI expert and problem-solver dedicated to making gift-giving personal and effortless.
+              </p>
+            </div>
+          </div>
+
+          {/* Decorative sparkle element */}
+          <div className="mt-12 text-3xl">✧</div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="relative z-10 border-t border-pink-200 bg-white/40 backdrop-blur-sm px-8 py-12 mt-20">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -87,31 +128,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* About Modal */}
-      {showAboutModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="glass-card rounded-2xl p-12 max-w-md w-full text-center relative animate-in fade-in zoom-in duration-300">
-            <button
-              onClick={() => setShowAboutModal(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light"
-            >
-              ×
-            </button>
-            <div className="text-5xl mb-4">🎁</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">About GiftEm</h2>
-            <p className="text-gray-600 font-medium mb-6">
-              We believe every gift tells a story. GiftEm combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
-            </p>
-            <button
-              onClick={() => setShowAboutModal(false)}
-              className="btn-gradient text-white px-6 py-2 rounded-full font-bold text-sm"
-            >
-              Got It
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Contact Modal */}
       {showContactModal && (
