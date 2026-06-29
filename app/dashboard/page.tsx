@@ -73,6 +73,21 @@ export default function Dashboard() {
     router.push('/');
   };
 
+  const deleteRecipient = async (recipientId: string) => {
+  if (!confirm("Delete this recipient?")) return;
+
+  await fetch("/api/recipients", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ recipientId }),
+  });
+
+  setRecipients(prev =>
+    prev.filter(r => r.recipientId !== recipientId)
+  );
+};
   const getDaysUntil = (dateString: string) => {
     const today = new Date();
     const eventDate = new Date(dateString);
@@ -137,67 +152,61 @@ export default function Dashboard() {
 
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
-                    {editingId === recipient.recipientId ? (
-  <input
-    value={editedName}
-    onChange={(e) => setEditedName(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") {
-        renameRecipient(recipient.recipientId);
-      }
-    }}
-    className="text-xl font-bold text-gray-900 border rounded px-2 py-1"
-    autoFocus
-  />
-) : (
   <div className="flex items-center gap-2">
     {editingId === recipient.recipientId ? (
-  <>
-    <input
-      value={editedName}
-      onChange={(e) => setEditedName(e.target.value)}
-      className="border rounded px-2 py-1"
-    />
+      <>
+        <input
+          value={editedName}
+          onChange={(e) => setEditedName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              renameRecipient(recipient.recipientId);
+            }
+          }}
+          className="border rounded px-2 py-1 text-gray-900"
+          autoFocus
+        />
 
-    <button
-      onClick={() => renameRecipient(recipient.recipientId)}
-    >
-      ✔
-    </button>
-  </>
-) : (
-  <>
-    <h3 className="text-xl font-bold text-gray-900">
-      {recipient.name}
-    </h3>
+        <button
+          onClick={() => renameRecipient(recipient.recipientId)}
+          className="text-green-600 hover:text-green-700"
+        >
+          ✔
+        </button>
+      </>
+    ) : (
+      <>
+        <h3 className="text-xl font-bold text-gray-900">
+          {recipient.name}
+        </h3>
 
-    <button
-      onClick={() => {
-        setEditingId(recipient.recipientId);
-        setEditedName(recipient.name);
-      }}
-    >
-      ✏️
-    </button>
-  </>
-)}
+        <button
+          onClick={() => {
+            setEditingId(recipient.recipientId);
+            setEditedName(recipient.name);
+          }}
+          className="text-gray-400 hover:text-pink-600"
+        >
+          ✏️
+        </button>
 
-    <button
-      onClick={() => {
-        setEditingId(recipient.recipientId);
-        setEditedName(recipient.name);
-      }}
-      className="text-gray-400 hover:text-pink-600"
-    >
-      
-    </button>
+        <button
+          onClick={() => deleteRecipient(recipient.recipientId)}
+          className="text-red-500 hover:text-red-700"
+        >
+          🗑️
+        </button>
+      </>
+    )}
   </div>
-)}
-                    {recipient.relationship && (
-                      <span className="text-xs btn-gradient text-white px-3 py-1 rounded-full font-bold">
-                        {recipient.relationship}
-                      </span>
-                    )}
+
+  {recipient.relationship && (
+    <span className="text-xs btn-gradient text-white px-3 py-1 rounded-full font-bold">
+      {recipient.relationship}
+    </span>
+  )}
+
+
                   </div>
 
                   <div className="space-y-1 mb-4">
