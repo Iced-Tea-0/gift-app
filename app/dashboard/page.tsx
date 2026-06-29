@@ -25,6 +25,8 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [editingId, setEditingId] = useState("");
+  const [editedName, setEditedName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -41,6 +43,30 @@ export default function Dashboard() {
         if (data.recipients) setRecipients(data.recipients);
       });
   }, [router]);
+
+  const renameRecipient = async (recipientId: string) => {
+  await fetch("/api/recipients", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      recipientId,
+      name: editedName,
+    }),
+  });
+
+  setRecipients(prev =>
+    prev.map(r =>
+      r.recipientId === recipientId
+        ? { ...r, name: editedName }
+        : r
+    )
+  );
+
+  setEditingId("");
+};
+
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -111,7 +137,62 @@ export default function Dashboard() {
 
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xl font-bold text-gray-900">{recipient.name}</h3>
+                    {editingId === recipient.recipientId ? (
+  <input
+    value={editedName}
+    onChange={(e) => setEditedName(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        renameRecipient(recipient.recipientId);
+      }
+    }}
+    className="text-xl font-bold text-gray-900 border rounded px-2 py-1"
+    autoFocus
+  />
+) : (
+  <div className="flex items-center gap-2">
+    {editingId === recipient.recipientId ? (
+  <>
+    <input
+      value={editedName}
+      onChange={(e) => setEditedName(e.target.value)}
+      className="border rounded px-2 py-1"
+    />
+
+    <button
+      onClick={() => renameRecipient(recipient.recipientId)}
+    >
+      ✔
+    </button>
+  </>
+) : (
+  <>
+    <h3 className="text-xl font-bold text-gray-900">
+      {recipient.name}
+    </h3>
+
+    <button
+      onClick={() => {
+        setEditingId(recipient.recipientId);
+        setEditedName(recipient.name);
+      }}
+    >
+      ✏️
+    </button>
+  </>
+)}
+
+    <button
+      onClick={() => {
+        setEditingId(recipient.recipientId);
+        setEditedName(recipient.name);
+      }}
+      className="text-gray-400 hover:text-pink-600"
+    >
+      
+    </button>
+  </div>
+)}
                     {recipient.relationship && (
                       <span className="text-xs btn-gradient text-white px-3 py-1 rounded-full font-bold">
                         {recipient.relationship}

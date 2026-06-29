@@ -3,6 +3,52 @@ import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { db } from "@/lib/dynamodb";
 import { getAuthUser } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
+import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const user = await getAuthUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { recipientId, name } = await req.json();
+
+    if (!recipientId || !name) {
+      return NextResponse.json(
+        { error: "recipientId and name are required" },
+        { status: 400 }
+      );
+    }
+
+    await db.send(
+      new UpdateCommand({
+        TableName: "recipients",
+        Key: {
+          recipientId,
+        },
+        UpdateExpression: "SET #name = :name",
+        ConditionExpression: "userId = :userId",
+        ExpressionAttributeNames: {
+          "#name": "name",
+        },
+        ExpressionAttributeValues: {
+          ":name": name,
+          ":userId": user.userId,
+        },
+      })
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Rename recipient error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
