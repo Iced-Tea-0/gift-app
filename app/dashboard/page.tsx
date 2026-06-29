@@ -73,6 +73,7 @@ export default function Dashboard() {
       </div>
 
       <nav className="sticky top-0 z-20 flex items-center justify-between px-8 py-6 border-b border-pink-200/50 glass">
+<<<<<<< HEAD
         <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
         <div className="flex items-center gap-8">
           <div className="text-sm text-gray-700 font-semibold">Welcome, {user?.name || 'User'}</div>
@@ -89,6 +90,14 @@ export default function Dashboard() {
             Contact
           </button>
           <button
+=======
+      <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
+      <div className="flex items-center gap-8">
+        <Link href="/" className="text-sm text-gray-600 hover:text-pink-600 transition">Home</Link>
+        <Link href="/add-recipient" className="text-sm text-gray-600 hover:text-pink-600 transition">Plan a Gift</Link>
+      <div className="text-sm text-gray-700 font-semibold">Welcome, {user?.name || 'User'}</div>
+      <button
+>>>>>>> 1639ea5 (fix login algorithm and sticky navbar overflow issue)
             onClick={handleLogout}
             className="btn-gradient text-white px-4 py-2 rounded-full text-sm font-bold hover:shadow-lg transition"
           >
