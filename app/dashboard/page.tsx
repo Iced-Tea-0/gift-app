@@ -64,21 +64,18 @@ export default function Dashboard() {
 
   return (
     <main
-      className="min-h-screen text-white overflow-hidden relative"
+      className="min-h-screen overflow-hidden relative"
       style={{
-        backgroundImage: 'url(/hero-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        background: 'linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%)',
       }}
     >
-      <nav className="sticky top-0 z-10 flex items-center justify-between px-8 py-6 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
-        <div className="text-2xl font-bold">GiftEm</div>
+      <nav className="sticky top-0 z-10 flex items-center justify-between px-8 py-6 border-b-2 border-pink-200 bg-white/60 backdrop-blur-md">
+        <div className="text-2xl font-bold text-pink-600">GiftEm</div>
         <div className="flex items-center gap-8">
-          <div className="text-sm">Welcome, {user?.name || 'User'}</div>
+          <div className="text-sm text-pink-900 font-medium">Welcome, {user?.name || 'User'}</div>
           <button
             onClick={handleLogout}
-            className="bg-slate-100 text-slate-900 px-4 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition"
+            className="bg-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-pink-600 transition"
           >
             Log Out
           </button>
@@ -87,12 +84,12 @@ export default function Dashboard() {
 
       <div className="relative z-10 px-8 py-12 max-w-7xl mx-auto w-full">
         <div className="flex items-center justify-between mb-12">
-          <h1 className="font-serif text-5xl md:text-6xl font-bold">
-            Your Gift Plans, <span className="text-slate-300">{user?.name || 'User'}</span>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold text-pink-900">
+            Your Gift Plans, <span className="text-pink-600">{user?.name || 'User'}</span>
           </h1>
           <Link
             href="/add-recipient"
-            className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block"
+            className="bg-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-pink-600 transition inline-block shadow-lg"
           >
             Add New Recipient
           </Link>
@@ -100,12 +97,12 @@ export default function Dashboard() {
 
         {goals.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
-            <p className="text-slate-300 text-lg mb-8">
+            <p className="text-pink-800 text-lg mb-8">
               No gift plans yet. Start planning your first gift.
             </p>
             <Link
               href="/add-recipient"
-              className="bg-slate-100 text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition inline-block"
+              className="bg-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-pink-600 transition inline-block shadow-lg"
             >
               Add Recipient
             </Link>
@@ -115,7 +112,7 @@ export default function Dashboard() {
             {goals.map((goal) => (
               <div
                 key={goal.savingsId}
-                className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl overflow-hidden hover:bg-white/15 transition"
+                className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition shadow-lg border border-pink-100"
               >
                 {goal.giftImage && (
                   <img
@@ -125,21 +122,21 @@ export default function Dashboard() {
                   />
                 )}
                 <div className="p-6">
-                  <h3 className="text-lg font-semibold mb-1 line-clamp-2">{goal.giftTitle}</h3>
-                  <p className="text-slate-300 text-sm mb-4">
+                  <h3 className="text-lg font-semibold mb-1 line-clamp-2 text-pink-900">{goal.giftTitle}</h3>
+                  <p className="text-pink-700 text-sm mb-4">
                     {getDaysUntil(goal.occasionDate)} days until occasion
                   </p>
 
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-slate-300">Savings Progress</span>
-                      <span className="font-semibold text-sm">
-                        {goal.currentAmount} / {goal.giftPrice}
+                      <span className="text-sm text-pink-700">Savings Progress</span>
+                      <span className="font-semibold text-sm text-pink-900">
+                        ${goal.currentAmount} / ${goal.giftPrice}
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-pink-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-amber-400 rounded-full transition-all duration-300"
+                        className="h-full bg-pink-500 rounded-full transition-all duration-300"
                         style={{ width: `${getProgress(goal.currentAmount, goal.giftPrice)}%` }}
                       />
                     </div>
@@ -147,7 +144,7 @@ export default function Dashboard() {
 
                   <Link
                     href={`/savings/${goal.savingsId}`}
-                    className="w-full block text-center border border-slate-300 text-slate-200 py-2 rounded-lg font-semibold hover:bg-slate-800/50 transition"
+                    className="w-full block text-center bg-pink-100 text-pink-700 py-2 rounded-lg font-semibold hover:bg-pink-200 transition"
                   >
                     View Savings
                   </Link>

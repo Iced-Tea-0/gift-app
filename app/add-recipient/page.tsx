@@ -139,19 +139,16 @@ export default function GiftPlanningChat() {
 
   return (
     <main
-      className="min-h-screen text-white overflow-hidden flex flex-col"
+      className="min-h-screen overflow-hidden flex flex-col"
       style={{
-        backgroundImage: 'url(/hero-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        background: 'linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%)',
       }}
     >
-      <div className="sticky top-0 z-10 flex items-center gap-4 px-8 py-6 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
-        <Link href="/dashboard" className="text-slate-300 hover:text-white transition">
-          Back
+      <div className="sticky top-0 z-10 flex items-center gap-4 px-8 py-6 border-b-2 border-pink-200 bg-white/60 backdrop-blur-md">
+        <Link href="/dashboard" className="text-pink-700 hover:text-pink-900 transition font-medium">
+          ← Back
         </Link>
-        <h1 className="font-serif text-2xl font-bold">Plan a Gift</h1>
+        <h1 className="font-serif text-2xl font-bold text-pink-900">Plan a Gift</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
@@ -159,12 +156,12 @@ export default function GiftPlanningChat() {
           <div key={message.id}>
             <div className={`flex gap-4 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.type === 'ai' && (
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900">
-                  G
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center font-bold text-white">
+                  💝
                 </div>
               )}
-              <div className={`max-w-xl ${message.type === 'user' ? 'bg-white/10 border border-white/20 rounded-3xl px-6 py-3 backdrop-blur-md' : 'bg-transparent'}`}>
-                <p className="text-slate-100">{message.text}</p>
+              <div className={`max-w-xl ${message.type === 'user' ? 'bg-pink-100 border border-pink-300 rounded-3xl px-6 py-3' : 'bg-transparent'}`}>
+                <p className={message.type === 'user' ? 'text-pink-900' : 'text-pink-900'}>{message.text}</p>
               </div>
             </div>
 
@@ -175,7 +172,7 @@ export default function GiftPlanningChat() {
                     <div
                       key={i}
                       onClick={() => window.open(product.url, '_blank')}
-                      className="bg-white/5 border border-white/20 rounded-xl p-4 backdrop-blur-md hover:bg-white/10 transition cursor-pointer"
+                      className="bg-white border border-pink-200 rounded-xl p-4 hover:shadow-lg transition cursor-pointer"
                     >
                       <img
                         src={product.image}
@@ -183,16 +180,16 @@ export default function GiftPlanningChat() {
                         className="w-full h-36 object-cover rounded-lg mb-3"
                       />
                       {product.interest && (
-                        <span className="text-xs text-amber-400 uppercase tracking-wide font-semibold mb-1 block">
+                        <span className="text-xs text-pink-600 uppercase tracking-wide font-semibold mb-1 block">
                           {product.interest}
                         </span>
                       )}
-                      <h3 className="font-semibold text-slate-100 text-sm mb-1 line-clamp-2">
+                      <h3 className="font-semibold text-pink-900 text-sm mb-1 line-clamp-2">
                         {product.title}
                       </h3>
-                      <p className="text-amber-400 font-bold text-sm">{product.price}</p>
+                      <p className="text-pink-600 font-bold text-sm">{product.price}</p>
                       {product.rating && (
-                        <p className="text-xs text-slate-400 mt-1">⭐ {product.rating}</p>
+                        <p className="text-xs text-pink-700 mt-1">⭐ {product.rating}</p>
                       )}
                     </div>
                   ))}
@@ -202,13 +199,13 @@ export default function GiftPlanningChat() {
                   <div className="flex flex-wrap gap-3 mt-4">
                     <button
                       onClick={() => handleQuickReply("Show me more like these")}
-                      className="px-4 py-2 bg-white/5 border border-white/20 rounded-full text-sm text-slate-200 hover:bg-white/10 transition"
+                      className="px-4 py-2 bg-white border border-pink-300 rounded-full text-sm text-pink-700 hover:bg-pink-50 transition"
                     >
                       Show more like these
                     </button>
                     <button
                       onClick={() => handleQuickReply("Show me something completely different")}
-                      className="px-4 py-2 bg-white/5 border border-white/20 rounded-full text-sm text-slate-200 hover:bg-white/10 transition"
+                      className="px-4 py-2 bg-white border border-pink-300 rounded-full text-sm text-pink-700 hover:bg-pink-50 transition"
                     >
                       Different category
                     </button>
@@ -220,7 +217,7 @@ export default function GiftPlanningChat() {
                           setShowSaveModal(true);
                         }
                       }}
-                      className="px-4 py-2 bg-amber-500/20 border border-amber-500/40 rounded-full text-sm text-amber-300 hover:bg-amber-500/30 transition"
+                      className="px-4 py-2 bg-pink-500 text-white rounded-full text-sm hover:bg-pink-600 transition"
                     >
                       I'll go with one of these
                     </button>
@@ -233,13 +230,13 @@ export default function GiftPlanningChat() {
 
         {isLoading && (
           <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center font-bold text-slate-900">
-              G
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center font-bold text-white">
+              💝
             </div>
             <div className="flex gap-1 items-center">
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
             </div>
           </div>
         )}
@@ -247,7 +244,7 @@ export default function GiftPlanningChat() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative z-10 border-t border-white/10 bg-slate-950/50 backdrop-blur-md px-8 py-6">
+      <div className="relative z-10 border-t-2 border-pink-200 bg-white/60 backdrop-blur-md px-8 py-6">
         <div className="flex gap-3 max-w-4xl mx-auto">
           <input
             type="text"
@@ -255,12 +252,12 @@ export default function GiftPlanningChat() {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Type your message..."
-            className="flex-1 bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-white/40 transition backdrop-blur-md"
+            className="flex-1 bg-white border border-pink-300 rounded-lg px-4 py-3 text-pink-900 placeholder-pink-400 focus:outline-none focus:border-pink-500 transition"
           />
           <button
             onClick={() => handleSendMessage()}
             disabled={!inputValue.trim() || isLoading}
-            className="bg-slate-100 text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Send
           </button>
@@ -268,9 +265,9 @@ export default function GiftPlanningChat() {
       </div>
 
       {showSaveModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="bg-slate-900 border border-white/20 rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="font-serif text-2xl font-bold mb-6">Pick your gift</h2>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <h2 className="font-serif text-2xl font-bold mb-6 text-pink-900">Pick your gift</h2>
 
             <div className="grid grid-cols-2 gap-3 mb-6">
               {allProducts.map((product, i) => (
@@ -279,35 +276,35 @@ export default function GiftPlanningChat() {
                   onClick={() => setSelectedProduct(product)}
                   className={`p-3 rounded-xl border cursor-pointer transition ${
                     selectedProduct?.title === product.title
-                      ? 'border-amber-400 bg-amber-500/10'
-                      : 'border-white/20 bg-white/5 hover:bg-white/10'
+                      ? 'border-pink-500 bg-pink-100'
+                      : 'border-pink-200 bg-pink-50 hover:bg-pink-100'
                   }`}
                 >
                   <img src={product.image} alt={product.title} className="w-full h-24 object-cover rounded-lg mb-2" />
-                  <p className="text-xs text-slate-100 line-clamp-2 mb-1">{product.title}</p>
-                  <p className="text-amber-400 font-bold text-sm">{product.price}</p>
+                  <p className="text-xs text-pink-900 line-clamp-2 mb-1">{product.title}</p>
+                  <p className="text-pink-600 font-bold text-sm">{product.price}</p>
                 </div>
               ))}
             </div>
 
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm text-slate-300 mb-2">Recipient's name</label>
+                <label className="block text-sm text-pink-900 mb-2 font-medium">Recipient's name</label>
                 <input
                   type="text"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                   placeholder="e.g. Mum, Sarah, John"
-                  className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-white/40"
+                  className="w-full bg-pink-50 border border-pink-300 rounded-lg px-4 py-3 text-pink-900 placeholder-pink-400 focus:outline-none focus:border-pink-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-300 mb-2">Occasion date</label>
+                <label className="block text-sm text-pink-900 mb-2 font-medium">Occasion date</label>
                 <input
                   type="date"
                   value={occasionDate}
                   onChange={(e) => setOccasionDate(e.target.value)}
-                  className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/40"
+                  className="w-full bg-pink-50 border border-pink-300 rounded-lg px-4 py-3 text-pink-900 focus:outline-none focus:border-pink-500"
                 />
               </div>
             </div>
@@ -315,14 +312,14 @@ export default function GiftPlanningChat() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowSaveModal(false)}
-                className="flex-1 border border-white/20 text-slate-300 py-3 rounded-lg hover:bg-white/5 transition"
+                className="flex-1 border border-pink-300 text-pink-700 py-3 rounded-lg hover:bg-pink-100 transition font-semibold"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveGift}
                 disabled={!selectedProduct || !recipientName || !occasionDate || saving}
-                className="flex-1 bg-amber-500 text-slate-900 py-3 rounded-lg font-semibold hover:bg-amber-400 disabled:opacity-50 transition"
+                className="flex-1 bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 disabled:opacity-50 transition"
               >
                 {saving ? 'Saving...' : 'Save Gift Goal'}
               </button>
@@ -332,8 +329,8 @@ export default function GiftPlanningChat() {
       )}
 
       {savedSuccess && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500/40 text-green-300 px-6 py-3 rounded-full z-50">
-          Gift saved! Check your dashboard.
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-pink-100 border-2 border-pink-400 text-pink-700 px-6 py-3 rounded-full z-50 shadow-lg font-medium">
+          ✨ Gift saved! Check your dashboard.
         </div>
       )}
     </main>
