@@ -165,10 +165,10 @@ export default function Dashboard() {
                   </div>
 
                   <Link
-                    href={`/savings/${goal.savingsId}`}
+                    href={`/recipients/${goal.recipientId}`}
                     className="w-full block text-center btn-gradient text-white py-3 rounded-full font-bold text-sm hover:shadow-lg transition"
                   >
-                    Manage Savings
+                    View Details
                   </Link>
                 </div>
               </div>
