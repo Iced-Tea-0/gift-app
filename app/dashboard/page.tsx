@@ -25,6 +25,8 @@ interface User {
 export default function Dashboard() {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -74,6 +76,18 @@ export default function Dashboard() {
         <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
         <div className="flex items-center gap-8">
           <div className="text-sm text-gray-700 font-semibold">Welcome, {user?.name || 'User'}</div>
+          <button
+            onClick={() => setShowAboutModal(true)}
+            className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold"
+          >
+            About
+          </button>
+          <button
+            onClick={() => setShowContactModal(true)}
+            className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold"
+          >
+            Contact
+          </button>
           <button
             onClick={handleLogout}
             className="btn-gradient text-white px-4 py-2 rounded-full text-sm font-bold hover:shadow-lg transition"
@@ -162,6 +176,94 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* About Modal */}
+      {showAboutModal && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="glass-card rounded-2xl p-12 max-w-md w-full text-center relative animate-in fade-in zoom-in duration-300">
+            <button
+              onClick={() => setShowAboutModal(false)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light"
+            >
+              ×
+            </button>
+            <div className="mb-8 text-5xl">✦</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About GiftEm</h2>
+            <p className="text-gray-600 font-medium mb-4">
+              We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether.
+            </p>
+            <p className="text-gray-600 font-medium mb-6">
+              GiftEm combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
+            </p>
+            <div className="pt-4 border-t border-white/30">
+              <p className="text-sm text-gray-700 font-semibold mb-4">Made with love by</p>
+              <div className="flex justify-center gap-4">
+                <a
+                  href="https://github.com/samaykandlur"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-xs transition"
+                >
+                  Samay
+                </a>
+                <span className="text-gray-400">&</span>
+                <a
+                  href="https://github.com/JuwairiyahP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-xs transition"
+                >
+                  Juwairiyah
+                </a>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowAboutModal(false)}
+              className="mt-6 btn-gradient text-white px-6 py-2 rounded-full font-bold text-sm"
+            >
+              Got It
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Contact Modal */}
+      {showContactModal && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="glass-card rounded-2xl p-12 max-w-md w-full relative animate-in fade-in zoom-in duration-300">
+            <button
+              onClick={() => setShowContactModal(false)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light"
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">We&apos;d Love to Hear From You</h2>
+            <p className="text-gray-600 text-center mb-6 font-medium text-sm">Got questions or feedback?</p>
+            
+            <form className="space-y-4" onSubmit={(e) => {
+              e.preventDefault();
+              setShowContactModal(false);
+            }}>
+              <input
+                type="email"
+                placeholder="your@email.com"
+                className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 font-medium"
+              />
+              <textarea
+                placeholder="Your message..."
+                rows={4}
+                className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 font-medium resize-none"
+              />
+              <button
+                type="submit"
+                className="w-full btn-gradient text-white py-3 rounded-full font-bold text-sm hover:shadow-lg transition"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

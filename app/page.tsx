@@ -23,7 +23,6 @@ export default function Home() {
           <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Home</a>
           <a href="#how-it-works" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">How It Works</a>
           <a href="#about" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</a>
-          <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Pricing</a>
           <button onClick={() => setShowContactModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Contact</button>
           
           <Link href="/auth" className="btn-gradient text-white px-6 py-2 rounded-full text-sm font-bold hover:shadow-lg transition inline-block">
@@ -93,22 +92,54 @@ export default function Home() {
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-300 to-pink-500 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
                 💝
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Sarah Mitchell</h3>
-              <p className="text-gray-600 font-semibold mb-2">Co-Founder & CEO</p>
-              <p className="text-sm text-gray-600">
-                Gift enthusiast and tech innovator passionate about meaningful connections.
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Samay Kandlur</h3>
+              <p className="text-gray-600 font-semibold mb-3">Co-Founder</p>
+              <div className="flex gap-3 justify-center">
+                <a
+                  href="https://github.com/samaykandlur"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"
+                >
+                  GitHub
+                </a>
+                <span className="text-gray-400">•</span>
+                <a
+                  href="https://www.linkedin.com/in/samay-shailesh-kandlur/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"
+                >
+                  LinkedIn
+                </a>
+              </div>
             </div>
 
             <div className="glass rounded-2xl p-8 hover:shadow-lg transition">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
                 🎀
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Marcus Chen</h3>
-              <p className="text-gray-600 font-semibold mb-2">Co-Founder & CTO</p>
-              <p className="text-sm text-gray-600">
-                AI expert and problem-solver dedicated to making gift-giving personal and effortless.
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Juwairiyah Shariff</h3>
+              <p className="text-gray-600 font-semibold mb-3">Co-Founder</p>
+              <div className="flex gap-3 justify-center">
+                <a
+                  href="https://github.com/JuwairiyahP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"
+                >
+                  GitHub
+                </a>
+                <span className="text-gray-400">•</span>
+                <a
+                  href="https://www.linkedin.com/in/juwairiyah-shariff-913582386/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 font-semibold text-sm transition"
+                >
+                  LinkedIn
+                </a>
+              </div>
             </div>
           </div>
 
@@ -120,7 +151,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-pink-200 bg-white/40 backdrop-blur-sm px-8 py-12 mt-20">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="text-gray-700 font-semibold">© 2024 GiftEm. All rights reserved.</div>
+          <div className="text-gray-700 font-semibold">© 2026 GiftEm. All rights reserved.</div>
           <div className="flex gap-8">
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Privacy</a>
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Terms</a>
