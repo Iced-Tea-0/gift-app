@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
       const seenTitles = new Set<string>();
 
       for (const p of scored) {
-        const titleKey = p.title.toLowerCase().split(' ').slice(0, 4).join(' ');
+        const titleKey = p.title.toLowerCase().split(' ').slice(0, 7).join(' ');
         if (seenTitles.has(titleKey)) continue;
         seenTitles.add(titleKey);
 
