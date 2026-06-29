@@ -24,7 +24,7 @@ export default function Home() {
 
       <nav className="sticky top-0 z-20 w-full bg-white/80 backdrop-blur-md border-b border-pink-100">
         <div className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-          <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
+          <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
           
           <div className="flex items-center gap-8">
             <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Home</a>
@@ -94,9 +94,9 @@ export default function Home() {
       <section id="about" className="relative z-10 px-8 py-20 max-w-6xl mx-auto">
         <div className="glass-card rounded-3xl p-12 md:p-16 text-center">
           <div className="mb-8 text-4xl">✦</div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind GiftEm</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind Amoris</h2>
           <p className="text-gray-700 text-lg font-medium max-w-3xl mx-auto mb-12">
-            We&apos;ve all been there — scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. GiftEm was born from a simple belief: that every gift should be meaningful, and giving it should be effortless.
+            We&apos;ve all been there — scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. Amoris was born from a simple belief: that every gift should be meaningful, and giving it should be effortless.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             <div className="glass rounded-2xl p-8 hover:shadow-lg transition">
@@ -126,7 +126,7 @@ export default function Home() {
 
       <footer className="relative z-10 border-t border-pink-200 bg-white/40 backdrop-blur-sm px-8 py-12 mt-20">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="text-gray-700 font-semibold">© 2026 GiftEm. All rights reserved.</div>
+          <div className="text-gray-700 font-semibold">© 2026 Amoris. All rights reserved.</div>
           <div className="flex gap-8">
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Privacy</a>
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Terms</a>
@@ -140,9 +140,9 @@ export default function Home() {
           <div className="glass-card rounded-2xl p-12 max-w-md w-full text-center relative animate-in fade-in zoom-in duration-300">
             <button onClick={() => setShowAboutModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl font-light">×</button>
             <div className="text-5xl mb-4">🎁</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">About GiftEm</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About Amoris</h2>
             <p className="text-gray-600 font-medium mb-6">
-              We believe every gift tells a story. GiftEm combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
+              We believe every gift tells a story. Amoris combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
             </p>
             <button onClick={() => setShowAboutModal(false)} className="btn-gradient text-white px-6 py-2 rounded-full font-bold text-sm">Got It</button>
           </div>
