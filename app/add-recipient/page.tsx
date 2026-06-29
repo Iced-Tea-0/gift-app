@@ -1,352 +1,131 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-interface Message {
-  id: string;
-  type: 'ai' | 'user';
-  text: string;
-  products?: Product[];
-}
-
-interface Product {
-  title: string;
-  price: string;
-  image: string;
-  url: string;
-  rating: string;
-  interest?: string;
-}
-
-export default function GiftPlanningChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'ai',
-      text: 'Hi! Who are you planning this gift for?',
-    },
-  ]);
-
-  const [inputValue, setInputValue] = useState('');
+export default function AddRecipient() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [showSaveModal, setShowSaveModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [recipientName, setRecipientName] = useState('');
-  const [occasionDate, setOccasionDate] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [savedSuccess, setSavedSuccess] = useState(false);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [form, setForm] = useState({
+    name: '',
+    relationship: '',
+    occasion: '',
+    occasionDate: '',
+    budget: '',
+  });
 
-  // Get today's date in YYYY-MM-DD format for min date attribute
-  const getTodayDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  };
+  const getTodayDate = () => new Date().toISOString().split('T')[0];
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleSendMessage = async (overrideText?: string) => {
-    const text = overrideText || inputValue;
-    if (!text.trim() || isLoading) return;
-
-    const userMessage: Message = {
-      id: String(Date.now()),
-      type: 'user',
-      text,
-    };
-
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
-    setInputValue('');
+  const handleSubmit = async () => {
+    if (!form.name || !form.occasionDate || !form.budget) return;
     setIsLoading(true);
-
-    const history = updatedMessages.map((m) => ({
-      role: m.type === 'ai' ? 'assistant' : 'user',
-      content: m.text,
-    }));
-
-    const userCountry = navigator.language.split('-')[1] || 'US';
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history, country: userCountry }),
-      });
-
-      const data = await res.json();
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: String(Date.now() + 1),
-          type: 'ai',
-          text: data.reply,
-          products: data.products || undefined,
-        },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: String(Date.now() + 1),
-          type: 'ai',
-          text: 'Something went wrong, please try again.',
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleQuickReply = (text: string) => {
-    handleSendMessage(text);
-  };
-
-  const handleSaveGift = async () => {
-    if (!selectedProduct || !recipientName || !occasionDate) return;
-    setSaving(true);
-
-    const price = parseFloat(selectedProduct.price.replace(/[^0-9.]/g, "")) || 0;
 
     try {
       const res = await fetch('/api/recipients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          recipientName,
-          relationship: '',
-          occasionDate,
-          giftTitle: selectedProduct.title,
-          giftPrice: price,
-          giftUrl: selectedProduct.url,
-          giftImage: selectedProduct.image,
-        }),
+        body: JSON.stringify(form),
       });
 
-      if (res.ok) {
-        setSavedSuccess(true);
-        setShowSaveModal(false);
-        setSelectedProduct(null);
-        setRecipientName('');
-        setOccasionDate('');
-        setTimeout(() => setSavedSuccess(false), 3000);
+      const data = await res.json();
+      if (data.recipientId) {
+        router.push(`/chat/${data.recipientId}`);
       }
     } catch {
-      console.error('Save failed');
+      console.error('Failed to create recipient');
     } finally {
-      setSaving(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen overflow-hidden flex flex-col relative">
-      {/* Decorative background */}
+    <main className="min-h-screen flex items-center justify-center px-6 relative">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-40 right-10 text-7xl opacity-10 animate-float">✦</div>
-        <div className="absolute bottom-1/4 left-20 text-6xl opacity-10 animate-float" style={{animationDelay: '1.5s'}}>✧</div>
+        <div className="absolute top-20 right-10 text-7xl opacity-10 animate-float">✦</div>
+        <div className="absolute bottom-1/4 left-10 text-6xl opacity-10 animate-float" style={{ animationDelay: '1.5s' }}>✧</div>
       </div>
 
-      <div className="fixed top-0 left-0 right-0 z-30 flex items-center gap-4 px-8 py-6 border-b border-pink-200/40 bg-white/50 backdrop-blur-md">
-        <Link href="/dashboard" className="text-gray-700 hover:text-pink-600 transition font-semibold">
-          ← Back to Dashboard
+      <div className="glass-card rounded-3xl p-10 w-full max-w-lg relative z-10">
+        <Link href="/dashboard" className="text-gray-500 hover:text-pink-600 transition text-sm font-semibold">
+          ← Back
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Plan a Gift</h1>
-      </div>
 
-      <div className="flex-1 overflow-y-auto px-8 py-8 space-y-6 relative z-10 max-w-4xl mx-auto w-full pt-24">
-        {messages.map((message, msgIndex) => (
-          <div key={message.id}>
-            <div className={`flex gap-4 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              {message.type === 'ai' && (
-                <div className="flex-shrink-0 w-12 h-12 rounded-full btn-gradient flex items-center justify-center font-bold text-white text-lg shadow-lg">
-                  💝
-                </div>
-              )}
-              <div className={`max-w-2xl ${message.type === 'user' ? 'btn-gradient text-white rounded-3xl px-6 py-3 shadow-lg' : 'glass-card rounded-2xl px-6 py-3'}`}>
-                <p className={message.type === 'user' ? 'font-semibold' : 'text-gray-900 font-medium'}>{message.text}</p>
-              </div>
-            </div>
+        <h1 className="text-3xl font-bold text-gray-900 mt-4 mb-2">Who are you gifting? 🎀</h1>
+        <p className="text-gray-500 mb-8 font-medium">We'll help you find the perfect gift and save for it 💌</p>
 
-            {message.products && message.products.length > 0 && (
-              <div className="ml-16 mt-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {message.products.map((product, i) => (
-                    <div
-                      key={i}
-                      onClick={() => window.open(product.url, '_blank')}
-                      className="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition cursor-pointer group"
-                    >
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="w-full h-40 object-cover group-hover:scale-105 transition duration-300"
-                      />
-                      <div className="p-4">
-                        {product.interest && (
-                          <span className="inline-block btn-gradient text-white text-xs font-bold px-3 py-1 rounded-full mb-2">
-                            {product.interest}
-                          </span>
-                        )}
-                        <h3 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
-                          {product.title}
-                        </h3>
-                        <div className="flex justify-between items-center">
-                          <p className="text-pink-600 font-bold text-lg">{product.price}</p>
-                          {product.rating && (
-                            <p className="text-xs text-gray-600 font-semibold">⭐ {product.rating}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {msgIndex === messages.length - 1 && (
-                  <div className="flex flex-wrap gap-3 mt-6">
-                    <button
-                      onClick={() => handleQuickReply("Show me more like these")}
-                      className="glass-card text-gray-900 px-5 py-2 rounded-full text-sm font-semibold hover:shadow-lg transition"
-                    >
-                      Show more like these
-                    </button>
-                    <button
-                      onClick={() => handleQuickReply("Show me something completely different")}
-                      className="glass-card text-gray-900 px-5 py-2 rounded-full text-sm font-semibold hover:shadow-lg transition"
-                    >
-                      Different category
-                    </button>
-                    <button
-                      onClick={() => {
-                        const lastProductMessage = [...messages].reverse().find(m => m.products && m.products.length > 0);
-                        if (lastProductMessage?.products) {
-                          setAllProducts(lastProductMessage.products);
-                          setShowSaveModal(true);
-                        }
-                      }}
-                      className="btn-gradient text-white px-5 py-2 rounded-full text-sm font-semibold hover:shadow-lg transition"
-                    >
-                      I'll go with one of these
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Recipient's Name *</label>
+            <input
+              type="text"
+              placeholder="e.g. Mum, Sarah, John"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
+            />
           </div>
-        ))}
 
-        {isLoading && (
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full btn-gradient flex items-center justify-center font-bold text-white text-lg shadow-lg">
-              💝
-            </div>
-            <div className="flex gap-2 items-center glass-card rounded-2xl px-4 py-3">
-              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-            </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Relationship</label>
+            <select
+              value={form.relationship}
+              onChange={(e) => setForm({ ...form, relationship: e.target.value })}
+              className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
+            >
+              <option value="">Select relationship</option>
+              <option value="Partner">Partner</option>
+              <option value="Mother">Mother</option>
+              <option value="Father">Father</option>
+              <option value="Sibling">Sibling</option>
+              <option value="Friend">Friend</option>
+              <option value="Colleague">Colleague</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
-        )}
 
-        <div ref={messagesEndRef} />
-      </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Occasion</label>
+            <input
+              type="text"
+              placeholder="e.g. Birthday, Anniversary, Christmas"
+              value={form.occasion}
+              onChange={(e) => setForm({ ...form, occasion: e.target.value })}
+              className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
+            />
+          </div>
 
-      <div className="relative z-20 border-t border-pink-200/50 glass px-8 py-6">
-        <div className="flex gap-3 max-w-4xl mx-auto">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            placeholder="Tell me about this person..."
-            className="flex-1 bg-white border border-pink-300 rounded-full px-6 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
-          />
-          <button
-            onClick={() => handleSendMessage()}
-            disabled={!inputValue.trim() || isLoading}
-            className="btn-gradient text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition disabled:opacity-50"
-          >
-            Send
-          </button>
-        </div>
-      </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Occasion Date *</label>
+            <input
+              type="date"
+              min={getTodayDate()}
+              value={form.occasionDate}
+              onChange={(e) => setForm({ ...form, occasionDate: e.target.value })}
+              className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
+            />
+          </div>
 
-      {showSaveModal && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="glass-card rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900">Pick your perfect gift</h2>
-
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              {allProducts.map((product, i) => (
-                <div
-                  key={i}
-                  onClick={() => setSelectedProduct(product)}
-                  className={`rounded-xl overflow-hidden cursor-pointer transition ${
-                    selectedProduct?.title === product.title
-                      ? 'btn-gradient shadow-lg'
-                      : 'glass-card hover:shadow-lg'
-                  }`}
-                >
-                  <img src={product.image} alt={product.title} className="w-full h-28 object-cover" />
-                  <div className="p-3">
-                    <p className={`text-xs line-clamp-2 font-semibold ${selectedProduct?.title === product.title ? 'text-white' : 'text-gray-900'}`}>{product.title}</p>
-                    <p className={`font-bold text-sm mt-1 ${selectedProduct?.title === product.title ? 'text-white' : 'text-pink-600'}`}>{product.price}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm text-gray-900 font-bold mb-2">Recipient's name</label>
-                <input
-                  type="text"
-                  value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
-                  placeholder="e.g. Mum, Sarah, John"
-                  className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-900 font-bold mb-2">Occasion date</label>
-                <input
-                  type="date"
-                  min={getTodayDate()}
-                  value={occasionDate}
-                  onChange={(e) => setOccasionDate(e.target.value)}
-                  className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowSaveModal(false)}
-                className="flex-1 glass-card text-gray-900 py-3 rounded-full hover:shadow-lg transition font-bold"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveGift}
-                disabled={!selectedProduct || !recipientName || !occasionDate || saving}
-                className="flex-1 btn-gradient text-white py-3 rounded-full hover:shadow-lg transition font-bold disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save Gift Goal'}
-              </button>
-            </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Budget *</label>
+            <input
+              type="number"
+              placeholder="e.g. 5000"
+              value={form.budget}
+              onChange={(e) => setForm({ ...form, budget: e.target.value })}
+              className="w-full bg-white border border-pink-300 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium"
+            />
           </div>
         </div>
-      )}
 
-      {savedSuccess && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 glass-card border-2 border-pink-400 text-gray-900 px-6 py-3 rounded-full z-50 shadow-xl font-bold animate-in slide-in-from-bottom-4">
-          Perfect! Gift saved to your dashboard.
-        </div>
-      )}
+        <button
+          onClick={handleSubmit}
+          disabled={!form.name || !form.occasionDate || !form.budget || isLoading}
+          className="w-full btn-gradient text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition disabled:opacity-50 mt-8"
+        >
+          {isLoading ? 'Setting up...' : 'Start Planning →'}
+        </button>
+      </div>
     </main>
   );
 }
