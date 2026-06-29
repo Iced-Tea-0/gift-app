@@ -4,16 +4,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-interface SavingsGoal {
-  savingsId: string;
+interface Recipient {
   recipientId: string;
-  giftTitle: string;
-  giftPrice: number;
-  giftImage: string;
+  name: string;
+  relationship: string;
+  occasion: string;
   occasionDate: string;
-  currentAmount: number;
-  dailyTarget: number;
-  milestones: { percent: number; unlocked: boolean }[];
+  budget: number;
+  savedGifts: any[];
 }
 
 interface User {
@@ -23,7 +21,7 @@ interface User {
 }
 
 export default function Dashboard() {
-  const [goals, setGoals] = useState<SavingsGoal[]>([]);
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -32,20 +30,15 @@ export default function Dashboard() {
   useEffect(() => {
     fetch('/api/auth/me')
       .then(res => {
-        if (!res.ok) {
-          router.push('/auth');
-          return null;
-        }
+        if (!res.ok) { router.push('/auth'); return null; }
         return res.json();
       })
-      .then(data => {
-        if (data) setUser(data);
-      });
+      .then(data => { if (data) setUser(data); });
 
-    fetch('/api/savings')
+    fetch('/api/recipients')
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) setGoals(data);
+        if (data.recipients) setRecipients(data.recipients);
       });
   }, [router]);
 
@@ -60,18 +53,14 @@ export default function Dashboard() {
     return Math.ceil((eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   };
 
-  const getProgress = (current: number, target: number) => {
-    return Math.min((current / target) * 100, 100);
-  };
-
   return (
     <main className="min-h-screen overflow-hidden relative">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-32 left-1/4 text-6xl opacity-10 animate-float">✧</div>
-        <div className="absolute bottom-40 right-1/4 text-7xl opacity-10 animate-float" style={{animationDelay: '2s'}}>✦</div>
+        <div className="absolute bottom-40 right-1/4 text-7xl opacity-10 animate-float" style={{ animationDelay: '2s' }}>✦</div>
       </div>
 
-      <nav className="sticky top-0 z-20 w-full bg-white/80 backdrop-blur-md border-b border-pink-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-pink-100">
         <div className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
           <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
           <div className="flex items-center gap-8">
@@ -80,17 +69,14 @@ export default function Dashboard() {
             <button onClick={() => setShowAboutModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">About</button>
             <button onClick={() => setShowContactModal(true)} className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Contact</button>
             <div className="text-sm text-gray-700 font-semibold">Welcome, {user?.name || 'User'}</div>
-            <button
-              onClick={handleLogout}
-              className="btn-gradient text-white px-4 py-2 rounded-full text-sm font-bold hover:shadow-lg transition"
-            >
+            <button onClick={handleLogout} className="btn-gradient text-white px-4 py-2 rounded-full text-sm font-bold hover:shadow-lg transition">
               Log Out
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="relative z-10 px-8 py-12 max-w-7xl mx-auto w-full">
+      <div className="relative z-10 px-8 py-12 max-w-7xl mx-auto w-full mt-24">
         <div className="flex items-center justify-between mb-12 flex-wrap gap-6">
           <div>
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900">
@@ -98,15 +84,12 @@ export default function Dashboard() {
             </h1>
             <p className="text-2xl text-gray-700 font-semibold mt-2">{user?.name || 'User'}</p>
           </div>
-          <Link
-            href="/add-recipient"
-            className="btn-gradient text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition inline-block"
-          >
+          <Link href="/add-recipient" className="btn-gradient text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition inline-block">
             Add New Recipient
           </Link>
         </div>
 
-        {goals.length === 0 ? (
+        {recipients.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
             <div className="text-6xl mb-4">🎁</div>
             <p className="text-gray-700 text-lg mb-8 font-semibold">No gift plans yet. Start planning your first gift!</p>
@@ -116,36 +99,47 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {goals.map((goal) => (
-              <div key={goal.savingsId} className="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition group">
-                {goal.giftImage && (
-                  <img src={goal.giftImage} alt={goal.giftTitle} className="w-full h-48 object-cover group-hover:scale-105 transition duration-300" />
-                )}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 line-clamp-2 text-gray-900">{goal.giftTitle}</h3>
-                  <div className="inline-block btn-gradient text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                    {getDaysUntil(goal.occasionDate)} days left
+            {recipients.map((recipient) => (
+              <div key={recipient.recipientId} className="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition">
+                {recipient.savedGifts?.length > 0 && recipient.savedGifts[0].image ? (
+                  <img src={recipient.savedGifts[0].image} alt={recipient.savedGifts[0].title} className="w-full h-40 object-cover" />
+                ) : (
+                  <div className="w-full h-40 bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center text-5xl">
+                    🎁
                   </div>
-                  <div className="mb-6">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm text-gray-700 font-semibold">Savings Progress</span>
-                      <span className="font-bold text-gray-900">${goal.currentAmount} / ${goal.giftPrice}</span>
-                    </div>
-                    <div className="w-full h-3 bg-white/40 rounded-full overflow-hidden">
-                      <div
-                        className="h-full btn-gradient rounded-full transition-all duration-500"
-                        style={{ width: `${getProgress(goal.currentAmount, goal.giftPrice)}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-gray-600 mt-2 font-medium">Save ${goal.dailyTarget}/day to reach your goal</p>
+                )}
+
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-xl font-bold text-gray-900">{recipient.name}</h3>
+                    {recipient.relationship && (
+                      <span className="text-xs btn-gradient text-white px-3 py-1 rounded-full font-bold">
+                        {recipient.relationship}
+                      </span>
+                    )}
                   </div>
 
-                  <Link
-                    href={`/recipients/${goal.recipientId}`}
-                    className="w-full block text-center btn-gradient text-white py-3 rounded-full font-bold text-sm hover:shadow-lg transition"
-                  >
-                    View Details
-                  </Link>
+                  <div className="space-y-1 mb-4">
+                    {recipient.occasion && <p className="text-sm text-gray-600 font-medium">🎉 {recipient.occasion}</p>}
+                    {recipient.occasionDate && <p className="text-sm text-gray-600 font-medium">📅 {getDaysUntil(recipient.occasionDate)} days away</p>}
+                    <p className="text-sm text-gray-600 font-medium">💰 Budget: {recipient.budget}</p>
+                    <p className="text-sm text-gray-600 font-medium">🎀 {recipient.savedGifts?.length || 0} gift{recipient.savedGifts?.length !== 1 ? 's' : ''} saved</p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Link
+                      href={`/chat/${recipient.recipientId}`}
+                      className="flex-1 text-center glass-card text-gray-900 py-2 rounded-full font-bold text-sm hover:shadow-lg transition"
+                    >
+                      Continue Chat
+                    </Link>
+                    <Link
+                      href={`/savings/${recipient.recipientId}`}
+                      className="flex-1 text-center btn-gradient text-white py-2 rounded-full font-bold text-sm hover:shadow-lg transition"
+                    >
+                      View Gifts & Savings
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
