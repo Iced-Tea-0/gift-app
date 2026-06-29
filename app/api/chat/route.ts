@@ -34,8 +34,28 @@ The <search> tag must be on its own line. The closing </search> tag must be on i
 
 After products are shown, ask: "Which of these feels right? Pick one or tell me what you liked about any of them and I'll find more like it."
 
-If the user picks one or describes what they liked, generate a new search block with 5-6 queries focused on that specific product type.
+If the user picks one or describes what they liked, NEVER repeat the previous search phrases.
 
+Generate 6 DIFFERENT Amazon search queries exploring different variations of the chosen item.
+
+Example:
+If they liked a LEGO set:
+- LEGO Technic supercar
+- LEGO Architecture skyline
+- LEGO Botanical collection
+- LEGO Star Wars display set
+- LEGO Ideas collector set
+- LEGO Creator Expert
+
+If they liked headphones:
+- noise cancelling headphones
+- premium wireless earbuds
+- audiophile headphones
+- gaming headset RGB
+- open back headphones
+- bluetooth over ear headphones
+
+Every follow-up query must represent a different style, category, or variation.
 Rules for queries:
 - Map interests to ACTUAL giftable products
 - Each query 4-6 words, specific and buyable
@@ -47,9 +67,14 @@ Rules for queries:
 
 Keep it fun, professional, keep it short.`;
 
-async function searchProducts(query: string, budget: number, minBudget: number, country: string = "US") {
-  const response = await fetch(
-    `https://real-time-amazon-data.p.rapidapi.com/search?query=${encodeURIComponent(query)}&page=1&country=${country}`,
+async function searchProducts(
+  query: string,
+  budget: number,
+  minBudget: number,
+  country: string = "US",
+  page: number = 1
+) {  const response = await fetch(
+    `https://real-time-amazon-data.p.rapidapi.com/search?query=${encodeURIComponent(query)}&page=${page}&country=${country}`,
     {
       headers: {
         "X-RapidAPI-Key": process.env.RAPIDAPI_KEY!,
@@ -115,7 +140,15 @@ export async function POST(req: NextRequest) {
 
       const results = [];
       for (const q of queries) {
-        const items = await searchProducts(q.query, budget, minBudget, country);
+  const randomPage = Math.floor(Math.random() * 3) + 1;
+
+  const items = await searchProducts(
+    q.query,
+    budget,
+    minBudget,
+    country,
+    randomPage
+  );
         console.log(`Query: ${q.query} → ${items.length} results`);
         results.push(items.map((p: any) => ({ ...p, interest: q.interest })));
         await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay between calls
