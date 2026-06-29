@@ -108,7 +108,7 @@ export default function SavingsPage() {
         <Link href="/dashboard" className="text-gray-700 hover:text-pink-600 transition font-semibold">
           ← Back to Dashboard
         </Link>
-        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
+        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
         <div />
       </nav>
 

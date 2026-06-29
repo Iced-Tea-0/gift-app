@@ -23,7 +23,7 @@ const urbanist = Urbanist({
 });
 
 export const metadata: Metadata = {
-  title: "GiftEm - AI-Powered Gift Planning",
+  title: "Amoris - AI-Powered Gift Planning",
   description: "AI-powered gift suggestions with savings goals that unlock your special moment",
 };
 

@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* Navigation Header */}
       <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
-        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
+        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
         
         <div className="flex items-center gap-8">
           <a href="#" className="text-sm text-gray-700 hover:text-pink-600 transition font-semibold">Home</a>
@@ -80,10 +80,10 @@ export default function Home() {
           {/* Decorative ribbon element */}
           <div className="mb-8 text-4xl">✦</div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind GiftEm</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">The Story Behind Amoris</h2>
           
           <p className="text-gray-700 text-lg font-medium max-w-3xl mx-auto mb-12">
-            We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. GiftEm was born from a simple belief: that every gift should be meaningful, and giving it should be effortless. We&apos;re here to help you never miss a special moment and always find a gift that truly speaks to the person you care about.
+            We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether. Amoris was born from a simple belief: that every gift should be meaningful, and giving it should be effortless. We&apos;re here to help you never miss a special moment and always find a gift that truly speaks to the person you care about.
           </p>
 
           {/* Founder Cards */}
@@ -151,7 +151,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-pink-200 bg-white/40 backdrop-blur-sm px-8 py-12 mt-20">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="text-gray-700 font-semibold">© 2026 GiftEm. All rights reserved.</div>
+          <div className="text-gray-700 font-semibold">© 2026 Amoris. All rights reserved.</div>
           <div className="flex gap-8">
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Privacy</a>
             <a href="#" className="text-gray-600 hover:text-pink-600 transition">Terms</a>

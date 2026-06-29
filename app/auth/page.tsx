@@ -82,7 +82,7 @@ export default function AuthPage() {
       </div>
 
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
-        <a href="/" className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent hover:opacity-80 transition">GiftEm</a>
+        <a href="/" className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent hover:opacity-80 transition">Amoris</a>
       </nav>
 
       <section className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-100px)] px-6 py-12">

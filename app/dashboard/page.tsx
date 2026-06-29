@@ -73,7 +73,7 @@ export default function Dashboard() {
       </div>
 
       <nav className="sticky top-0 z-20 flex items-center justify-between px-8 py-6 border-b border-pink-200/50 glass">
-        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">GiftEm</div>
+        <div className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">Amoris</div>
         <div className="flex items-center gap-8">
           <div className="text-sm text-gray-700 font-semibold">Welcome, {user?.name || 'User'}</div>
           <button
@@ -188,12 +188,12 @@ export default function Dashboard() {
               ×
             </button>
             <div className="mb-8 text-5xl">✦</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">About GiftEm</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About Amoris</h2>
             <p className="text-gray-600 font-medium mb-4">
               We&apos;ve all been there—scrambling to find the perfect gift at the last minute, or worse, missing an important occasion altogether.
             </p>
             <p className="text-gray-600 font-medium mb-6">
-              GiftEm combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
+              Amoris combines AI-powered personalization with savings planning to help you find the perfect gift for every person you love.
             </p>
             <div className="pt-4 border-t border-white/30">
               <p className="text-sm text-gray-700 font-semibold mb-4">Made with love by</p>
